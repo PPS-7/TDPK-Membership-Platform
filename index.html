@@ -1,307 +1,501 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>TDPK Member Pass – GitHub Pages Demo</title>
-  <meta name="description" content="TDPK Member Pass demo (no build tools). React + Supabase on a single HTML file." />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TDPK Member Pass – Pure HTML Demo</title>
+<meta name="description" content="TDPK Member Pass demo with no backend. All data in localStorage.">
 
-  <!-- Base styles (clean, dark, responsive) -->
-  <style>
-    :root{
-      --bg:#0f1115; --bg2:#121623; --card:#151a28; --border:#22293d;
-      --text:#eef1ff; --muted:#9aa4c1; --primary:#6ca8ff; --secondary:#a78bfa;
-      --ok:#9be28f; --warn:#ffd28f; --danger:#ff9aa7;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans";
-      background: radial-gradient(1200px 800px at 10% -10%, #1b2237 0, transparent 60%),
-                  radial-gradient(900px 600px at 100% 0%, #181d30 0, transparent 60%),
-                  linear-gradient(180deg, var(--bg), #0d101a 40%, #0b0e16 100%);
-      color:var(--text);
-    }
-    a{ color:var(--primary); text-decoration:none }
-    .container{ max-width:1100px; margin:0 auto; padding:24px }
-    .header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px }
-    .brand{ font-weight:700; letter-spacing:.3px }
-    nav a{ margin-right:12px }
-    .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.25) }
-    .muted{ color:var(--muted) }
-    .btn{ border:1px solid var(--border); background:#14182a; color:var(--text); padding:10px 14px; border-radius:10px; cursor:pointer }
-    .btn.primary{ background: linear-gradient(90deg, #2563eb, #0891b2); border-color: transparent; }
-    .btn.warn{ background:#332610; border-color:#5e4b1a }
-    .btn.block{ width:100% }
-    .grid{ display:grid; gap:16px }
-    @media(min-width: 900px){ .grid.cols-2{ grid-template-columns:repeat(2, 1fr)} .grid.cols-3{ grid-template-columns:repeat(3, 1fr)} }
-    .label{ font-size:12px; color:var(--muted); margin:8px 0 6px }
-    .input{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:#0f1424; color:var(--text) }
-    .badge{ display:inline-block; padding:4px 8px; border:1px solid var(--border); border-radius:999px; font-size:12px; margin-right:8px }
-    .ok{ color:var(--ok) } .warn{ color:var(--warn) } .danger{ color:var(--danger) }
-    .qr{ font-family:monospace; background:#0c1222; border:1px dashed var(--border); padding:12px; border-radius:10px; overflow:auto }
-    footer{ color:#7e86a3; text-align:center; padding:32px 16px }
-    .heroTitle{ font-size:44px; font-weight:800; background:linear-gradient(90deg,#6ca8ff,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent }
-    .pill{ display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:#121629 }
-    .hidden{ display:none !important }
-  </style>
-
-  <!-- React, ReactDOM (CDN) -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Supabase (CDN) -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1115; --card:#151a28; --border:#22293d; --text:#eef1ff;
+    --muted:#9aa4c1; --primary:#6ca8ff; --accent:#a78bfa;
+    --ok:#9be28f; --warn:#ffd28f; --danger:#ff9aa7;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 800px at 10% -10%, #1b2237 0, transparent 60%),
+                radial-gradient(900px 600px at 100% 0%, #181d30 0, transparent 60%),
+                linear-gradient(180deg, #0f1115, #0b0f1b 40%, #0b0e16 100%);
+    color:var(--text);
+  }
+  a{ color:var(--primary); text-decoration:none }
+  .container{ max-width:1100px; margin:0 auto; padding:24px }
+  .header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px }
+  .brand{ font-weight:800; letter-spacing:.3px }
+  nav a{ margin-right:12px }
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.25) }
+  .muted{ color:var(--muted) }
+  .btn{ border:1px solid var(--border); background:#14182a; color:var(--text); padding:10px 14px; border-radius:10px; cursor:pointer }
+  .btn.primary{ background: linear-gradient(90deg, #2563eb, #0891b2); border-color: transparent; }
+  .btn.warn{ background:#332610; border-color:#5e4b1a }
+  .btn.ok{ background:#12351a; border-color:#1e5a2a }
+  .btn.block{ width:100% }
+  .grid{ display:grid; gap:16px }
+  @media(min-width: 900px){ .grid.cols-2{ grid-template-columns:repeat(2, 1fr)} .grid.cols-3{ grid-template-columns:repeat(3, 1fr)} }
+  .label{ font-size:12px; color:var(--muted); margin:8px 0 6px }
+  .input, select, textarea{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:#0f1424; color:var(--text) }
+  .badge{ display:inline-block; padding:4px 8px; border:1px solid var(--border); border-radius:999px; font-size:12px; margin-right:8px }
+  .ok{ color:var(--ok) } .warn{ color:var(--warn) } .danger{ color:var(--danger) }
+  .qr{ font-family:monospace; background:#0c1222; border:1px dashed var(--border); padding:12px; border-radius:10px; overflow:auto }
+  .heroTitle{ font-size:44px; font-weight:800; background:linear-gradient(90deg,#6ca8ff,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent }
+  .pill{ display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:#121629 }
+  footer{ color:#7e86a3; text-align:center; padding:32px 16px }
+  .table{ width:100%; border-collapse: collapse; margin-top:10px; }
+  .table th, .table td{ border:1px solid var(--border); padding:8px; text-align:left; }
+</style>
 </head>
 <body>
-  <div id="app"></div>
+<div class="container">
+  <div class="header">
+    <div>
+      <div class="brand">TDPK Member Pass</div>
+      <div class="muted">Pure HTML Demo • No backend • localStorage</div>
+    </div>
+    <nav>
+      <a href="#/">Home</a>
+      <a href="#/auth">Auth</a>
+      <a href="#/member">Member</a>
+      <a href="#/partner">Partner</a>
+      <a href="#/admin">Admin</a>
+      <button class="btn" id="btn-logout" style="display:none">Logout</button>
+    </nav>
+  </div>
 
-  <script type="text/javascript">
-  ;(() => {
-    const { useState, useEffect } = React;
+  <div id="view"></div>
+</div>
 
-    // -------------- EDIT THESE TWO VALUES --------------
-    const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";      // <-- change me
-    const SUPABASE_ANON_KEY = "YOUR_PUBLIC_ANON_KEY_HERE";         // <-- change me
-    // ---------------------------------------------------
+<footer>© TDPK Demo • Static HTML on GitHub Pages</footer>
 
-    // Create Supabase client
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<script>
+/* =========================
+   Tiny SPA + Fake Backend
+   ========================= */
 
-    // Simple hash-router util
-    function useHashRoute() {
-      const [route, setRoute] = useState(location.hash.replace('#','') || '/');
-      useEffect(() => {
-        const onHash = () => setRoute(location.hash.replace('#','') || '/');
-        window.addEventListener('hashchange', onHash);
-        return () => window.removeEventListener('hashchange', onHash);
-      }, []);
-      function go(to){ location.hash = to.startsWith('#') ? to : ('#' + to) }
-      return [route, go];
-    }
+// ---- Demo data schema (localStorage) ----
+const LS_KEY = 'tdpk_demo_v1';
 
-    // Top-level App
-    function App(){
-      const [route, go] = useHashRoute();
-      const [session, setSession] = useState(null);
+const defaultData = {
+  users: [
+    // Admins
+    { id: 'u1', email: 'pakkanan.cha@truedigitalpark.com', password: 'test1811', role: 'admin' },
+    { id: 'u2', email: 'pete.admin@tdpk.co.th', password: 'Demo!Admin123', role: 'admin' },
+    // Partners
+    { id: 'u3', email: 'takumi@salt.jp', password: 'Demo!Partner123', role: 'partner_user', partner_id: 'p2' },
+    { id: 'u4', email: 'may@truespace.co.th', password: 'Demo!Partner123', role: 'partner_user', partner_id: 'p1' },
+    // Members
+    { id: 'u5', email: 'alice.member@demo.com', password: 'Demo!Member123', role: 'member', member_id: 'm1' },
+    { id: 'u6', email: 'taro.tenant@demo.com', password: 'Demo!Tenant123', role: 'member', member_id: 'm2' },
+    { id: 'u7', email: 'nicha.global@demo.com', password: 'Demo!Global123', role: 'member', member_id: 'm3' }
+  ],
+  members: [
+    { id: 'm1', user_id: 'u5', first_name: 'Alice', last_name: 'Wong', tier: 'Member', status: 'active', country: 'TH' },
+    { id: 'm2', user_id: 'u6', first_name: 'Taro', last_name: 'Tanaka', tier: 'Tenant', status: 'active', country: 'JP', lease_end: '2025-12-31' },
+    { id: 'm3', user_id: 'u7', first_name: 'Nicha', last_name: 'Supakij', tier: 'Global', status: 'active', country: 'TH' },
+  ],
+  partners: [
+    { id: 'p1', display_name: 'TrueSpace Bangkok', country: 'TH', timezone: 'Asia/Bangkok' },
+    { id: 'p2', display_name: 'SALT Fukuoka', country: 'JP', timezone: 'Asia/Tokyo' },
+    { id: 'p3', display_name: 'InnoPad Taipei Hub', country: 'TW', timezone: 'Asia/Taipei' },
+  ],
+  offers: [
+    { id: 'o1', partner_id: 'p1', type: 'perk', title: '10% off Day Pass', eligibility_tiers: ['Member','Tenant','Global'], status:'active' },
+    { id: 'o2', partner_id: 'p2', type: 'package', title: 'Weekend Flex Desk – ¥3,500', eligibility_tiers: ['Global','Tenant'], status:'active' },
+    { id: 'o3', partner_id: 'p3', type: 'perk', title: '20% off for TDPK Members', eligibility_tiers: ['Member','Tenant','Global'], status:'active' },
+  ],
+  redemptions: [],
+  verifications: [],
+  session: null // { user_id: 'u1' }
+};
 
-      useEffect(() => {
-        supabase.auth.getSession().then(({ data }) => setSession(data.session));
-        const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
-        return () => { sub.subscription.unsubscribe() }
-      }, []);
+function loadDB(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+function saveDB(db){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
 
-      function logout(){
-        supabase.auth.signOut().then(()=>go('/auth'));
-      }
+function seedDemo(){
+  saveDB(defaultData);
+}
+function resetDemo(){
+  localStorage.removeItem(LS_KEY);
+}
 
-      return React.createElement('div', { className: 'container' },
-        React.createElement(Header, { session, go, logout }),
-        route === '/' ? React.createElement(Home, { go, supabase }) :
-        route.startsWith('/auth') ? React.createElement(Auth, { go, supabase }) :
-        React.createElement(Dashboard, { go, supabase, session })
-      )
-    }
+// ---- Simple auth helpers ----
+function getSession(){ const db = loadDB(); return db?.session || null; }
+function setSession(user_id){ const db = loadDB()||defaultData; db.session = user_id ? { user_id } : null; saveDB(db); updateLogoutBtn(); }
+function currentUser(){
+  const db = loadDB();
+  if(!db || !db.session) return null;
+  return db.users.find(u => u.id === db.session.user_id) || null;
+}
+function updateLogoutBtn(){
+  const btn = document.getElementById('btn-logout');
+  btn.style.display = getSession() ? 'inline-block' : 'none';
+}
+document.getElementById('btn-logout').onclick = ()=>{ setSession(null); routeTo('/auth'); }
 
-    // Header
-    function Header({ session, go, logout }){
-      return React.createElement('div', { className: 'header' },
-        React.createElement('div', null,
-          React.createElement('div', { className:'brand' }, 'TDPK Member Pass'),
-          React.createElement('div', { className:'muted' }, 'GitHub Pages Demo (React + Supabase)')
-        ),
-        React.createElement('nav', null,
-          React.createElement('a', { href:'#/' }, 'Home'),
-          React.createElement('a', { href:'#/auth' }, 'Auth'),
-          React.createElement('a', { href:'#/dashboard' }, 'Dashboard'),
-          session
-            ? React.createElement('button', { className:'btn', onClick: logout }, 'Logout')
-            : null
-        )
-      )
-    }
+// ---- Routing ----
+function routeTo(path){ location.hash = path.startsWith('#') ? path : ('#'+path); }
+function getRoute(){ return location.hash.replace('#','') || '/'; }
+window.addEventListener('hashchange', render);
+window.addEventListener('load', () => { if(!loadDB()){ seedDemo(); } render(); });
 
-    // Home / Landing
-    function Home({ go, supabase }){
-      const [busy, setBusy] = useState(false);
-      const [msg, setMsg] = useState('');
+// ---- QR token simulator (rotating every 30s) ----
+function makeToken(memberId){
+  // token = base64(memberId + "." + floor(now/30s))
+  const slice = Math.floor(Date.now()/1000/30);
+  const raw = `${memberId}.${slice}`;
+  return btoa(raw);
+}
+function verifyToken(token){
+  try{
+    const [memberId, slice] = atob(token).split('.');
+    const nowSlice = Math.floor(Date.now()/1000/30);
+    const ok = (String(nowSlice) === slice) || (String(nowSlice-1) === slice); // allow small skew
+    return { valid: !!ok, memberId };
+  }catch{
+    return { valid:false };
+  }
+}
 
-      async function seed(){
-        setBusy(true); setMsg('');
-        try{
-          // Calls your deployed Edge Function (must exist in Supabase)
-          const { data, error } = await supabase.functions.invoke('ensure-demo-users');
-          if(error) throw new Error(error.message);
-          setMsg('✅ Demo users created. Go to Auth to sign in.');
-        }catch(e){
-          setMsg('❌ Seeding failed: ' + (e.message || e));
-        }finally{
-          setBusy(false);
-        }
-      }
+// ---- Views ----
+function render(){
+  updateLogoutBtn();
+  const view = document.getElementById('view');
+  const path = getRoute();
 
-      return React.createElement('div', { className:'grid cols-2' },
-        React.createElement('div', { className:'card' },
-          React.createElement('div', { className:'pill', style:{marginBottom:10} }, 'No build required • Works on GitHub Pages'),
-          React.createElement('div', { className:'heroTitle' }, 'Work anywhere, connect everywhere.'),
-          React.createElement('p', { className:'muted' }, 'A minimal, static demo of the TDPK Member Pass. Seed demo accounts, log in, and see the dashboard.'),
-          React.createElement('div', { className:'grid cols-2', style:{marginTop:16} },
-            React.createElement('button', { className:'btn primary', onClick: () => go('/auth') }, 'Get Started'),
-            React.createElement('button', { className:'btn', onClick: seed, disabled: busy }, busy ? 'Seeding…' : 'Setup Demo Accounts')
-          ),
-          msg && React.createElement('div', { style:{marginTop:12} }, React.createElement('div', { className:'badge ok' }, msg))
-        ),
+  if(path === '/'){
+    return view.innerHTML = homeHTML();
+  }
+  if(path === '/auth'){
+    return view.innerHTML = authHTML();
+  }
+  if(path === '/member'){
+    return view.innerHTML = memberHTML();
+  }
+  if(path === '/partner'){
+    return view.innerHTML = partnerHTML();
+  }
+  if(path === '/admin'){
+    return view.innerHTML = adminHTML();
+  }
+  view.innerHTML = notFoundHTML();
+}
 
-        React.createElement('div', { className:'grid cols-1' },
-          React.createElement('div', { className:'card' },
-            React.createElement('h3', null, 'Configure your Supabase keys'),
-            React.createElement('p', { className:'muted' },
-              'Open this HTML file and replace ',
-              React.createElement('code', null, 'SUPABASE_URL'), ' and ',
-              React.createElement('code', null, 'SUPABASE_ANON_KEY'),
-              ' at the top of the script.'
-            ),
-            React.createElement('p', { className:'muted' },
-              'Make sure you deployed the Edge Function ',
-              React.createElement('code', null, 'ensure-demo-users'),
-              ' and that Email/Password auth is ON in your Supabase project.'
-            )
-          ),
-          React.createElement('div', { className:'card' },
-            React.createElement('h3', null, 'Demo Credentials'),
-            React.createElement('p', { className:'muted' }, 'After seeding, try these:'),
-            React.createElement('pre', { className:'qr' },
-`Your Admin: pakkanan.cha@truedigitalpark.com / test1811
+// ---- Home ----
+function homeHTML(){
+  return `
+  <div class="grid cols-2">
+    <div class="card">
+      <div class="pill" style="margin-bottom:10px">No backend • localStorage only</div>
+      <div class="heroTitle">Work anywhere, connect everywhere.</div>
+      <p class="muted">Seed demo accounts, log in, verify passes, and simulate offers — all in a single HTML file.</p>
+      <div class="grid cols-2" style="margin-top:16px">
+        <button class="btn primary" onclick="routeTo('/auth')">Get Started</button>
+        <button class="btn" onclick="seedAndToast()">Setup Demo Data</button>
+      </div>
+      <div id="home-msg" style="margin-top:12px"></div>
+    </div>
+
+    <div class="grid cols-1">
+      <div class="card">
+        <h3>Demo Credentials</h3>
+        <p class="muted">Already seeded by default. Re-run “Setup Demo Data” if needed.</p>
+        <pre class="qr">
+Your Admin: pakkanan.cha@truedigitalpark.com / test1811
 
 Admin (alt):    pete.admin@tdpk.co.th   / Demo!Admin123
 Partner (SALT): takumi@salt.jp          / Demo!Partner123
-Member:         alice.member@demo.com   / Demo!Member123`
-            )
-          )
-        )
-      )
+Member:         alice.member@demo.com   / Demo!Member123
+        </pre>
+      </div>
+      <div class="card">
+        <h3>What’s included</h3>
+        <ul class="muted">
+          <li>Rotating QR-like token (30s)</li>
+          <li>Partner verification (scan token or email lookup)</li>
+          <li>Offers list by partner & tier</li>
+          <li>Redemption & verification logs (simulated)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  `;
+}
+function seedAndToast(){
+  seedDemo();
+  document.getElementById('home-msg').innerHTML = `<div class="badge ok">✅ Demo data seeded.</div>`;
+}
+
+// ---- Auth ----
+function authHTML(){
+  const u = currentUser();
+  return `
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>Sign in</h2>
+      <form onsubmit="return signIn(event)">
+        <div class="label">Email</div>
+        <input class="input" id="auth-email" placeholder="you@example.com" />
+        <div class="label">Password</div>
+        <input class="input" type="password" id="auth-pass" placeholder="••••••••" />
+        <div style="height:12px"></div>
+        <button class="btn primary block">Sign in</button>
+      </form>
+      <div class="grid cols-2" style="margin-top:12px">
+        <button class="btn warn" onclick="fillMyDemo()">Fill my demo admin</button>
+        <button class="btn" onclick="routeTo('/');seedAndToast()">Re-seed</button>
+      </div>
+      <div id="auth-msg" style="margin-top:12px">${u?'<div class="badge ok">Already signed in as '+u.email+'</div>':''}</div>
+    </div>
+
+    <div class="card">
+      <h3>Tips</h3>
+      <ul class="muted">
+        <li>No backend here. All data is in your browser’s localStorage.</li>
+        <li>Use the Partner view to verify a member by email or token.</li>
+        <li>Admin can view counts and impersonate a member/partner (demo).</li>
+      </ul>
+    </div>
+  </div>
+  `;
+}
+function fillMyDemo(){
+  document.getElementById('auth-email').value = 'pakkanan.cha@truedigitalpark.com';
+  document.getElementById('auth-pass').value = 'test1811';
+}
+function signIn(e){
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('auth-pass').value;
+  const db = loadDB() || defaultData;
+  const user = db.users.find(u => u.email.toLowerCase() === email && u.password === pass);
+  const msg = document.getElementById('auth-msg');
+  if(!user){ msg.innerHTML = `<div class="badge danger">❌ Invalid credentials</div>`; return false; }
+  setSession(user.id);
+  msg.innerHTML = `<div class="badge ok">✅ Signed in as ${user.email}</div>`;
+  setTimeout(()=> routeTo(roleDefaultRoute(user.role)), 400);
+  return false;
+}
+function roleDefaultRoute(role){
+  if(role === 'admin') return '/admin';
+  if(role === 'partner_user') return '/partner';
+  return '/member';
+}
+
+// ---- Member ----
+function memberHTML(){
+  const db = loadDB() || defaultData;
+  const user = currentUser();
+  if(!user || user.role!=='member' && user.role!=='admin'){ return gateHTML('member'); }
+
+  // If admin, impersonate first member for preview
+  const member = (user.role==='member')
+    ? db.members.find(m => m.user_id === user.id)
+    : db.members[0];
+
+  if(!member) return `<div class="card">No member profile found.</div>`;
+
+  const token = makeToken(member.id);
+
+  // offers eligible by tier
+  const eligibleOffers = db.offers.filter(o => o.status==='active' && o.eligibility_tiers.includes(member.tier))
+    .map(o => {
+      const partner = db.partners.find(p => p.id === o.partner_id);
+      return `<tr><td>${o.title}</td><td>${o.type}</td><td>${partner?.display_name||'-'}</td></tr>`;
+    }).join('');
+
+  return `
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>Member Pass</h2>
+      <div><strong>${member.first_name} ${member.last_name}</strong></div>
+      <div class="muted">${user.email}</div>
+      <div style="margin-top:8px">
+        <span class="badge">Tier: ${member.tier}</span>
+        <span class="badge">Status: ${member.status}</span>
+      </div>
+      <div style="margin-top:12px">
+        <div class="label">Rotating token (updates every ~30s)</div>
+        <div class="qr" id="qr-box">${token}</div>
+      </div>
+      <div style="margin-top:8px">
+        <button class="btn" onclick="refreshToken('${member.id}')">Refresh token</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Eligible Offers</h3>
+      <table class="table">
+        <thead><tr><th>Title</th><th>Type</th><th>Partner</th></tr></thead>
+        <tbody>${eligibleOffers || '<tr><td colspan="3" class="muted">No offers</td></tr>'}</tbody>
+      </table>
+    </div>
+  </div>
+  `;
+}
+function refreshToken(memberId){
+  document.getElementById('qr-box').textContent = makeToken(memberId);
+}
+
+// ---- Partner ----
+function partnerHTML(){
+  const db = loadDB() || defaultData;
+  const user = currentUser();
+  if(!user || (user.role!=='partner_user' && user.role!=='admin')){ return gateHTML('partner'); }
+
+  const partnerId = (user.role==='partner_user') ? user.partner_id : db.partners[0].id;
+  const partner   = db.partners.find(p => p.id === partnerId);
+
+  return `
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>Partner Portal</h2>
+      <div class="muted">${partner?.display_name||'Unknown Partner'}</div>
+      <div style="margin-top:10px"><strong>Verify membership</strong></div>
+      <div class="label">1) Paste token (from Member QR)</div>
+      <textarea class="input" id="verify-token" placeholder="Paste token here"></textarea>
+      <div class="label">2) Or enter member email</div>
+      <input class="input" id="verify-email" placeholder="member@example.com"/>
+      <div style="margin-top:10px">
+        <button class="btn ok" onclick="doVerify('${partnerId}')">Verify</button>
+      </div>
+      <div id="verify-result" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <h3>Offers (this partner)</h3>
+      ${db.offers.filter(o=>o.partner_id===partnerId).map(o=>`
+        <div class="card" style="margin-top:8px">
+          <div><strong>${o.title}</strong></div>
+          <div class="muted">Type: ${o.type} • Status: ${o.status}</div>
+          <div style="margin-top:8px"><button class="btn" onclick="simulateRedeem('${o.id}','${partnerId}')">Simulate redemption</button></div>
+        </div>
+      `).join('') || '<div class="muted">No offers yet.</div>'}
+    </div>
+  </div>
+  `;
+}
+function doVerify(partnerId){
+  const token = (document.getElementById('verify-token').value || '').trim();
+  const email = (document.getElementById('verify-email').value || '').trim().toLowerCase();
+  const db = loadDB() || defaultData;
+
+  let member = null;
+  let method = 'lookup';
+
+  if(token){
+    const res = verifyToken(token);
+    if(res.valid){
+      member = db.members.find(m => m.id === res.memberId);
+      method = 'qr';
     }
+  }
+  if(!member && email){
+    const u = db.users.find(u => u.email.toLowerCase() === email);
+    if(u){ member = db.members.find(m => m.user_id === u.id); }
+  }
 
-    // Auth page
-    function Auth({ go, supabase }){
-      const [email, setEmail] = useState('');
-      const [password, setPassword] = useState('');
-      const [msg, setMsg] = useState('');
-      const [busy, setBusy] = useState(false);
+  const out = document.getElementById('verify-result');
+  if(!member){
+    out.innerHTML = `<div class="badge danger">❌ Not found or invalid token.</div>`;
+    db.verifications.push({ id: 'v'+(db.verifications.length+1), partner_id: partnerId, method, result:'not_found', at: new Date().toISOString() });
+    saveDB(db);
+    return;
+  }
 
-      async function signIn(e){
-        e.preventDefault();
-        setBusy(true); setMsg('');
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if(error){ setMsg('❌ ' + error.message); setBusy(false); return; }
-        setMsg('✅ Signed in. Redirecting…');
-        setTimeout(()=>location.hash = '#/dashboard', 400);
-      }
+  const result = (member.status==='active') ? 'active' : 'expired';
+  out.innerHTML = `
+    <div class="badge ${result==='active'?'ok':'warn'}">Result: ${result.toUpperCase()}</div>
+    <div style="margin-top:6px" class="muted">Member: ${member.first_name} ${member.last_name} • Tier: ${member.tier}</div>
+  `;
+  db.verifications.push({ id: 'v'+(db.verifications.length+1), partner_id: partnerId, member_id: member.id, method, result, at: new Date().toISOString() });
+  saveDB(db);
+}
+function simulateRedeem(offerId, partnerId){
+  const db = loadDB() || defaultData;
+  // pick the first active member for demo
+  const member = db.members.find(m=>m.status==='active');
+  if(!member){ alert('No active members to redeem.'); return; }
+  db.redemptions.push({ id:'r'+(db.redemptions.length+1), offer_id: offerId, member_id: member.id, partner_id: partnerId, at: new Date().toISOString() });
+  saveDB(db);
+  alert('✅ Redemption recorded for '+member.first_name);
+}
 
-      async function magic(){
-        setBusy(true); setMsg('');
-        const { error } = await supabase.auth.signInWithOtp({ email });
-        setMsg(error ? ('❌ ' + error.message) : '✅ Magic link sent (check inbox).');
-        setBusy(false);
-      }
+// ---- Admin ----
+function adminHTML(){
+  const db = loadDB() || defaultData;
+  const user = currentUser();
+  if(!user || user.role!=='admin'){ return gateHTML('admin'); }
 
-      function fillMyDemo(){
-        setEmail('pakkanan.cha@truedigitalpark.com');
-        setPassword('test1811');
-      }
+  const counts = {
+    users: db.users.length,
+    members: db.members.length,
+    partners: db.partners.length,
+    offers: db.offers.length,
+    verifications: db.verifications.length,
+    redemptions: db.redemptions.length
+  };
 
-      return React.createElement('div', { className:'grid cols-2' },
-        React.createElement('div', { className:'card' },
-          React.createElement('h2', null, 'Sign in'),
-          React.createElement('form', { onSubmit: signIn },
-            React.createElement('div', { className:'label' }, 'Email'),
-            React.createElement('input', { className:'input', value:email, onChange:e=>setEmail(e.target.value), placeholder:'you@example.com' }),
-            React.createElement('div', { className:'label' }, 'Password'),
-            React.createElement('input', { className:'input', type:'password', value:password, onChange:e=>setPassword(e.target.value), placeholder:'••••••••' }),
-            React.createElement('div', { style:{height:12} }),
-            React.createElement('button', { className:'btn primary block', disabled: busy }, busy ? 'Signing in…' : 'Sign in')
-          ),
-          React.createElement('div', { className:'grid cols-2', style:{marginTop:12} },
-            React.createElement('button', { className:'btn', onClick: magic, disabled: busy }, 'Send magic link'),
-            React.createElement('button', { className:'btn warn', onClick: fillMyDemo, disabled: busy }, 'Fill my demo admin')
-          ),
-          msg && React.createElement('div', { style:{marginTop:12} }, React.createElement('div', { className: msg.includes('✅') ? 'badge ok' : 'badge danger' }, msg))
-        ),
+  return `
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>Admin Console</h2>
+      <div>Users: <strong>${counts.users}</strong> • Members: <strong>${counts.members}</strong> • Partners: <strong>${counts.partners}</strong></div>
+      <div>Offers: <strong>${counts.offers}</strong> • Verifications (all time): <strong>${counts.verifications}</strong> • Redemptions: <strong>${counts.redemptions}</strong></div>
+      <div style="margin-top:12px" class="grid cols-3">
+        <button class="btn" onclick="seedDemo();alert('Seeded.');">Re-seed demo</button>
+        <button class="btn" onclick="resetDemo();alert('Cleared.');">Clear storage</button>
+        <button class="btn" onclick="impersonateMember()">Impersonate member</button>
+      </div>
+      <div style="margin-top:10px" class="muted">Impersonation just sets session to the first member (demo only).</div>
+    </div>
 
-        React.createElement('div', { className:'card' },
-          React.createElement('h3', null, 'Tips'),
-          React.createElement('ul', { className:'muted' },
-            React.createElement('li', null, 'Run seeding on Home if login fails.'),
-            React.createElement('li', null, 'Confirm Email/Password auth is ON in Supabase.'),
-            React.createElement('li', null, 'Edge Function ',
-              React.createElement('code', null, 'ensure-demo-users'),
-              ' must be deployed and share the same project as this page.'
-            )
-          )
-        )
-      )
-    }
+    <div class="card">
+      <h3>Recent Verifications</h3>
+      <table class="table">
+        <thead><tr><th>Time</th><th>Partner</th><th>Member</th><th>Result</th><th>Method</th></tr></thead>
+        <tbody>
+          ${db.verifications.slice().reverse().slice(0,6).map(v=>{
+            const p = db.partners.find(p=>p.id===v.partner_id);
+            const m = db.members.find(m=>m.id===v.member_id);
+            return `<tr>
+              <td>${formatTime(v.at)}</td>
+              <td>${p?.display_name||'-'}</td>
+              <td>${m? (m.first_name+' '+m.last_name) : '-'}</td>
+              <td>${v.result}</td>
+              <td>${v.method}</td>
+            </tr>`;
+          }).join('') || '<tr><td colspan="5" class="muted">No verifications yet.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  `;
+}
+function impersonateMember(){
+  const db = loadDB() || defaultData;
+  const m = db.members[0];
+  if(!m) return alert('No members found.');
+  setSession(m.user_id);
+  routeTo('/member');
+}
 
-    // Dashboard
-    function Dashboard({ supabase, session }){
-      const [profile, setProfile] = useState(null);
-      const [loading, setLoading] = useState(true);
-
-      useEffect(() => {
-        (async () => {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user){ setLoading(false); return; }
-          // Try reading role from public.users if your RLS allows it
-          let role = 'member';
-          try{
-            const { data } = await supabase.from('users').select('role').eq('id', user.id).maybeSingle();
-            role = data?.role || 'member';
-          }catch{}
-          setProfile({ email: user.email, role });
-          setLoading(false);
-        })();
-      }, []);
-
-      if (loading) return React.createElement('div', { className:'card' }, 'Loading…');
-
-      if (!session) {
-        return React.createElement('div', { className:'card' },
-          'You are not signed in. ',
-          React.createElement('a', { href:'#/auth' }, 'Go to Auth')
-        );
-      }
-
-      return React.createElement('div', { className:'grid cols-2' },
-        React.createElement('div', { className:'card' },
-          React.createElement('h2', null, 'Dashboard'),
-          profile
-            ? React.createElement(React.Fragment, null,
-                React.createElement('div', null, 'Signed in as: ', React.createElement('strong', null, profile.email)),
-                React.createElement('div', { style:{marginTop:10} },
-                  React.createElement('span', { className:'badge' }, 'Role: ' + profile.role),
-                  React.createElement('span', { className:'badge' }, 'Status: Active (demo)')
-                ),
-                React.createElement('div', { style:{marginTop:12} },
-                  React.createElement('div', { className:'qr' }, 'QR: [simulated rotating token]')
-                )
-              )
-            : 'No profile'
-        ),
-        React.createElement('div', { className:'card' },
-          React.createElement('h3', null, 'What next?'),
-          React.createElement('ul', { className:'muted' },
-            React.createElement('li', null, 'Add Wallet Pass generation'),
-            React.createElement('li', null, 'Add Partner “Scan & Verify” camera page'),
-            React.createElement('li', null, 'Implement Offers listing and redemption logging')
-          )
-        )
-      )
-    }
-
-    // Render app
-    ReactDOM.createRoot(document.getElementById('app')).render(React.createElement(App));
-  })();
-  </script>
-
-  <footer>© TDPK Demo • Static HTML on GitHub Pages</footer>
+// ---- Helpers ----
+function gateHTML(role){
+  const u = currentUser();
+  if(!u){
+    return `<div class="card">You need to sign in to view this page. <a href="#/auth">Go to Auth</a></div>`;
+  }
+  return `<div class="card">Your role <strong>${u.role}</strong> cannot access this page. <a href="#/${role}">Try another page</a></div>`;
+}
+function formatTime(ts){
+  try{ return new Date(ts).toLocaleString(); }catch{ return ts; }
+}
+</script>
 </body>
 </html>
